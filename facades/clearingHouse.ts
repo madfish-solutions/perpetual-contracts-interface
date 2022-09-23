@@ -67,7 +67,7 @@ export default class ClearingHouse extends CommonFacade {
    * @eventParam address indexed amm
    * @eventParam uint256 amount
    * @eventParam uint256 fundingPayment
-   * 
+   *
    * @param amount added margin in 18 digits
    */
   public async addMargin(amm: address, amount: BigNumber) {
@@ -141,6 +141,7 @@ export default class ClearingHouse extends CommonFacade {
         [quoteAssetAmount.toString()],
         [leverage.toString()],
         [baseAssetAmountLimit.toString()],
+        { from: this.signer.address },
       );
   }
 
