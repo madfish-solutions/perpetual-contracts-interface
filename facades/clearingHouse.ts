@@ -268,7 +268,7 @@ export default class ClearingHouse extends CommonFacade {
    */
   public async updateFundingRate() {
     return await (
-      await this.contract.connect(this.signer).updateFundingRate()
+      await this.contract.connect(this.signer).settleFunding()
     ).wait();
   }
 
