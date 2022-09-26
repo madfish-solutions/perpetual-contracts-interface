@@ -71,9 +71,11 @@ export default class ClearingHouse extends CommonFacade {
    * @param amount added margin in 18 digits
    */
   public async addMargin(amm: address, amount: BigNumber) {
-    return await this.contract
-      .connect(this.signer)
-      .addMargin(amm, [amount.toString()]);
+    return await (
+      await this.contract
+        .connect(this.signer)
+        .addMargin(amm, [amount.toString()])
+    ).wait();
   }
 
   /**
@@ -90,9 +92,11 @@ export default class ClearingHouse extends CommonFacade {
     amm: address,
     amount: BigNumber,
   ): Promise<Transaction> {
-    return await this.contract.methods
-      .connect(this.signer)
-      .removeMargin(amm, [amount.toString()]);
+    return await (
+      await this.contract.methods
+        .connect(this.signer)
+        .removeMargin(amm, [amount.toString()])
+    ).wait();
   }
 
   /**
@@ -100,7 +104,9 @@ export default class ClearingHouse extends CommonFacade {
    * @param amm Pool address // apple/usd
    */
   public async settlePosition(amm: address): Promise<Transaction> {
-    return await this.contract.connect(this.signer).settlePosition(amm);
+    return await (
+      await this.contract.connect(this.signer).settlePosition(amm)
+    ).wait();
   }
 
   /**
@@ -133,16 +139,18 @@ export default class ClearingHouse extends CommonFacade {
     leverage: BigNumber,
     baseAssetAmountLimit: BigNumber,
   ): Promise<Transaction> {
-    return await this.contract
-      .connect(this.signer)
-      .openPosition(
-        amm,
-        side,
-        [quoteAssetAmount.toString()],
-        [leverage.toString()],
-        [baseAssetAmountLimit.toString()],
-        { from: this.signer.address },
-      );
+    return await (
+      await this.contract
+        .connect(this.signer)
+        .openPosition(
+          amm,
+          side,
+          [quoteAssetAmount.toString()],
+          [leverage.toString()],
+          [baseAssetAmountLimit.toString()],
+          { from: this.signer.address },
+        )
+    ).wait();
   }
 
   /**
@@ -165,7 +173,9 @@ export default class ClearingHouse extends CommonFacade {
    * @eventParam int256 fundingPayment
    */
   public async closePosition(_amm: address): Promise<Transaction> {
-    return await this.contract.connect(this.signer).closePosition(_amm);
+    return await (
+      await this.contract.connect(this.signer).closePosition(_amm)
+    ).wait();
   }
 
   /**
@@ -200,7 +210,9 @@ export default class ClearingHouse extends CommonFacade {
    * @eventParam int256 fundingPayment
    */
   public async liquidate(amm: address, trader: address): Promise<Transaction> {
-    return await this.contract.connect(this.signer).liquidate(amm, trader);
+    return await (
+      await this.contract.connect(this.signer).liquidate(amm, trader)
+    ).wait();
   }
 
   /**
@@ -234,29 +246,38 @@ export default class ClearingHouse extends CommonFacade {
    * @eventParam uint256 spotPrice
    * @eventParam int256 fundingPayment
    */
-  public liquidateWithSlippage(
+  public async liquidateWithSlippage(
     amm: address,
     trader: address,
     quoteAssetAmountLimit: BigNumber,
   ): Promise<Transaction> {
-    return this.contract
-      .connect(this.signer)
-      .liquidateWithSlippage(amm, trader, [quoteAssetAmountLimit.toString()]);
+    return await (
+      await this.contract
+        .connect(this.signer)
+        .liquidateWithSlippage(amm, trader, [quoteAssetAmountLimit.toString()])
+    ).wait();
   }
 
   /**
-   * @notice if funding rate is positive, traders with long position pay traders with short position and vice versa.
-   * @param amm IAmm address
+   * @notice update funding rate
+   * @dev only allow to update while reaching `nextFundingTime`
+   *
+   * @event FundingRateUpdated
+   * @eventParam int256 rate
+   * @eventParam uint256 underlyingPrice
    */
-  public async fundingPayment(amm: address): Promise<Transaction> {
-    return await this.contract.connect(this.signer).fundingPayment(amm);
+  public async updateFundingRate() {
+    return await (
+      await this.contract.connect(this.signer).updateFundingRate()
+    ).wait();
   }
 
   //web3.utils.asciiToHex(str)
   public async addAggregator(key: string, addrr: address) {
-    console.log(this.contract);
-    return await this.contract
-      .connect(this.signer)
-      .addAggregator(ethers.utils.formatBytes32String(key), addrr);
+    return await (
+      await this.contract
+        .connect(this.signer)
+        .addAggregator(ethers.utils.formatBytes32String(key), addrr)
+    ).wait();
   }
 }

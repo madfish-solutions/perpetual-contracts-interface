@@ -23,11 +23,13 @@ export default class ChainlinkPriceFeed extends CommonFacade {
    * @eventParam uint256 timestamp
    */
   public async updateLatestRoundData(priceFeedKey: string) {
-    return await this.contract
-      .connect(this.signer)
-      .updateLatestRoundData(
-        ethers.utils.formatBytes32String(priceFeedKey.toUpperCase()),
-      );
+    return await (
+      await this.contract
+        .connect(this.signer)
+        .updateLatestRoundData(
+          ethers.utils.formatBytes32String(priceFeedKey.toUpperCase()),
+        )
+    ).wait();
   }
 
   /**

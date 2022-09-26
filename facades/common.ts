@@ -37,6 +37,4 @@ export default class CommonFacade {
   ): BigNumber {
     return value.multipliedBy(precision);
   }
-
-  //mapping(address => AmmMap) internal ammMap;
 }
