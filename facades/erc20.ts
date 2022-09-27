@@ -50,6 +50,6 @@ export default class ERC20 extends CommonFacade {
   }
 
   public async mint(to: address, amount: BigNumber) {
-    return await this.contract.connect(this.signer).mint(to, amount.toString());
+    return await this.contract.connect(this.signer).mint(to, amount.toFixed());
   }
 }

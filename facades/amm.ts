@@ -20,4 +20,16 @@ export default class Amm extends CommonFacade {
         .settleFunding({ gasLimit: 1000000 })
     ).wait();
   }
+
+  public async getUnderlyingPrice() {
+    return await this.contract.getUnderlyingPrice();
+  }
+
+  public async setPriceFeed(priceFeed: address) {
+    return await (
+      await this.contract
+        .connect(this.signer)
+        .setPriceFeed(priceFeed, { gasLimit: 1000000 })
+    ).wait();
+  }
 }
