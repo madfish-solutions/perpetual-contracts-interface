@@ -13,7 +13,13 @@ export default class ClearingHouseViewer extends CommonFacade {
     super(provider, contractAddress, clearingViewerABI, signer);
   }
 
-  public async getLiquidationFeeRatio(): Promise<BigNumber> {
-    return await this.contract.liquidationFeeRatio();
+  public async getPersonalBalanceWithFundingPayment(
+    quouteToken: string,
+    trader: address,
+  ): Promise<BigNumber> {
+    return await this.contract.getPersonalBalanceWithFundingPayment(
+      quouteToken,
+      trader,
+    );
   }
 }
