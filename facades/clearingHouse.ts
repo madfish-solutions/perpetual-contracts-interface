@@ -2,7 +2,7 @@ import { ethers, Transaction } from "ethers";
 import { address, Side } from "../types";
 import { BigNumber } from "bignumber.js";
 import CommonFacade from "./common";
-import { clearingHouseABI, chainLinkABI } from "../abi";
+import { clearingHouseABI } from "../abi";
 
 export default class ClearingHouse extends CommonFacade {
   constructor(
@@ -10,7 +10,7 @@ export default class ClearingHouse extends CommonFacade {
     contractAddress: address,
     signer: ethers.Wallet,
   ) {
-    super(provider, contractAddress, chainLinkABI, signer);
+    super(provider, contractAddress, clearingHouseABI, signer);
   }
 
   public async getLiquidationFeeRatio(): Promise<BigNumber> {
