@@ -14,11 +14,11 @@ export default class Amm extends CommonFacade {
   }
 
   public async updateFundingRate() {
-    return await (
-      await this.contract
-        .connect(this.signer)
-        .settleFunding({ gasLimit: 1000000 })
-    ).wait();
+    const tx = await this.contract
+      .connect(this.signer)
+      .settleFunding({ gasLimit: 1000000 });
+    console.log(tx);
+    return await tx.wait();
   }
 
   public async getUnderlyingPrice() {

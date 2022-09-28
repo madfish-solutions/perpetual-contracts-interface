@@ -93,7 +93,7 @@ export default class ClearingHouse extends CommonFacade {
     amount: BigNumber,
   ): Promise<Transaction> {
     return await (
-      await this.contract.methods
+      await this.contract
         .connect(this.signer)
         .removeMargin(amm, [amount.toString()])
     ).wait();
@@ -148,7 +148,7 @@ export default class ClearingHouse extends CommonFacade {
           [quoteAssetAmount.toString()],
           [leverage.toString()],
           [baseAssetAmountLimit.toString()],
-          { from: this.signer.address },
+          { gasLimit: 1000000 },
         )
     ).wait();
   }
@@ -174,7 +174,9 @@ export default class ClearingHouse extends CommonFacade {
    */
   public async closePosition(_amm: address): Promise<Transaction> {
     return await (
-      await this.contract.connect(this.signer).closePosition(_amm)
+      await this.contract
+        .connect(this.signer)
+        .closePosition(_amm, { gasLimit: 1000000 })
     ).wait();
   }
 
@@ -211,7 +213,9 @@ export default class ClearingHouse extends CommonFacade {
    */
   public async liquidate(amm: address, trader: address): Promise<Transaction> {
     return await (
-      await this.contract.connect(this.signer).liquidate(amm, trader)
+      await this.contract
+        .connect(this.signer)
+        .liquidate(amm, trader, { gasLimit: 1000000 })
     ).wait();
   }
 
@@ -254,7 +258,12 @@ export default class ClearingHouse extends CommonFacade {
     return await (
       await this.contract
         .connect(this.signer)
-        .liquidateWithSlippage(amm, trader, [quoteAssetAmountLimit.toString()])
+        .liquidateWithSlippage(
+          amm,
+          trader,
+          [quoteAssetAmountLimit.toString()],
+          { gasLimit: 1000000 },
+        )
     ).wait();
   }
 

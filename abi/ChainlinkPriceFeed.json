@@ -19,44 +19,6 @@
     "type": "event"
   },
   {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "bytes32",
-        "name": "messageId",
-        "type": "bytes32"
-      }
-    ],
-    "name": "PriceUpdateMessageIdSent",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint80",
-        "name": "roundId",
-        "type": "uint80"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "price",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "timestamp",
-        "type": "uint256"
-      }
-    ],
-    "name": "PriceUpdated",
-    "type": "event"
-  },
-  {
     "inputs": [
       {
         "internalType": "bytes32",
@@ -112,6 +74,25 @@
         "internalType": "bytes32",
         "name": "_priceFeedKey",
         "type": "bytes32"
+      }
+    ],
+    "name": "getLatestTimestamp",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_priceFeedKey",
+        "type": "bytes32"
       },
       {
         "internalType": "uint256",
@@ -120,6 +101,30 @@
       }
     ],
     "name": "getPreviousPrice",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_priceFeedKey",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_numOfRoundBack",
+        "type": "uint256"
+      }
+    ],
+    "name": "getPreviousTimestamp",
     "outputs": [
       {
         "internalType": "uint256",
@@ -155,13 +160,18 @@
         "internalType": "bytes32",
         "name": "_priceFeedKey",
         "type": "bytes32"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_interval",
+        "type": "uint256"
       }
     ],
-    "name": "getPriceFeedLength",
+    "name": "getTwapPrice",
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "length",
+        "name": "",
         "type": "uint256"
       }
     ],
@@ -196,25 +206,12 @@
         "type": "bytes32"
       }
     ],
-    "name": "prevTimestampMap",
+    "name": "priceFeedDecimalMap",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint8",
         "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "priceFeedAddress",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
+        "type": "uint8"
       }
     ],
     "stateMutability": "view",
@@ -262,25 +259,6 @@
     "inputs": [
       {
         "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "name": "priceMap",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "registered",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
         "name": "_priceFeedKey",
         "type": "bytes32"
       }
@@ -300,12 +278,27 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
+        "internalType": "bytes32",
+        "name": "_priceFeedKey",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_price",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_timestamp",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_roundId",
+        "type": "uint256"
       }
     ],
-    "name": "setOwner",
+    "name": "setLatestData",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -313,12 +306,12 @@
   {
     "inputs": [
       {
-        "internalType": "bytes32",
-        "name": "_priceFeedKey",
-        "type": "bytes32"
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
       }
     ],
-    "name": "updateLatestRoundData",
+    "name": "setOwner",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

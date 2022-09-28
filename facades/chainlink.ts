@@ -42,6 +42,13 @@ export default class ChainlinkPriceFeed extends CommonFacade {
     );
   }
 
+  public async getTwapPrice(priceFeedKey: string, interval: number) {
+    return await this.contract.getTwapPrice(
+      ethers.utils.formatBytes32String(priceFeedKey.toUpperCase()),
+      interval,
+    );
+  }
+
   /**
    * @param priceFeedKey currency (aapl, amd)
    * @param addr address of the chainlink oracle
