@@ -13,14 +13,6 @@ export default class Amm extends CommonFacade {
     super(provider, contractAddress, ammABI, signer);
   }
 
-  public async updateFundingRate() {
-    const tx = await this.contract
-      .connect(this.signer)
-      .settleFunding({ gasLimit: 1000000 });
-    console.log(tx);
-    return await tx.wait();
-  }
-
   public async getUnderlyingPrice() {
     return await this.contract.getUnderlyingPrice();
   }
