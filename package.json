@@ -18,7 +18,7 @@
     "@types/bignumber.js": "5.0.0",
     "@types/node": "18.7.18",
     "ethers": "5.7.1",
-    "metamas": "0.1.0",
+    "metamask": "0.1.0",
     "bn.js": "5.2.1",
     "react": "18.2.0"
   }
