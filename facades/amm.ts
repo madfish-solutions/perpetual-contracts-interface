@@ -3,6 +3,7 @@ import { address, Side } from "../types";
 import { BigNumber } from "bignumber.js";
 import CommonFacade from "./common";
 import { ammABI } from "../abi";
+import { toBigNumber } from "../number";
 
 export default class Amm extends CommonFacade {
   constructor(
@@ -14,7 +15,7 @@ export default class Amm extends CommonFacade {
   }
 
   public async getUnderlyingPrice() {
-    return await this.contract.getUnderlyingPrice();
+    return toBigNumber(await this.contract.getUnderlyingPrice());
   }
 
   public async setPriceFeed(priceFeed: address) {

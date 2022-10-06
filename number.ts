@@ -1,5 +1,6 @@
 import BigNumber from "bignumber.js"
 import BN from "bn.js"
+import { BigNumber as EthersBigNumber } from 'ethers';
 
 export const DEFAULT_TOKEN_DECIMALS = 18
 export const ONE_DAY = 60 * 60 * 24
@@ -27,4 +28,16 @@ export function toDecimal(val: number | string): Decimal {
 
 export function fromDecimal(val: Decimal, decimals = DEFAULT_TOKEN_DECIMALS): BN {
     return new BN(val.d).mul(new BN(10).pow(new BN(decimals))).div(new BN(10).pow(new BN(DEFAULT_TOKEN_DECIMALS)))
+}
+
+export function toBigNumber(value: number | string | EthersBigNumber | [number | EthersBigNumber]) {
+    if (value instanceof Array) {
+        return toBigNumber(value[0]);
+    }
+
+    if (value instanceof BigNumber) {
+        return value;
+    }
+
+    return new BigNumber(value.toString());
 }
