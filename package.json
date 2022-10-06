@@ -1,5 +1,5 @@
 {
-  "name": "@diodon-perp/",
+  "name": "perpetual-contracts-interface",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
@@ -7,19 +7,30 @@
     "test": "tests"
   },
   "scripts": {
-    "go": "ts-node ./test/ss.ts"
+    "go": "ts-node src/test/ss.ts"
   },
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "bignumber.js": "^9.1.0",
+    "ethers": "5.7.1"
+  },
   "devDependencies": {
-    "caver-js": "1.9.0",
+    "@typescript-eslint/eslint-plugin": "^5.39.0",
+    "@typescript-eslint/parser": "^5.39.0",
+    "eslint": "8.22.0",
+    "eslint-config-next": "^12.3.1",
+    "eslint-import-resolver-typescript": "^3.5.1",
+    "eslint-loader": "^4.0.2",
+    "eslint-plugin-flowtype": "^8.0.3",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-sonarjs": "^0.15.0",
+    "prettier": "^2.7.1",
+    "react": "^18.2.0",
     "ts-node": "10.9.1",
-    "typescript": "4.8.3",
-    "@types/bignumber.js": "5.0.0",
-    "@types/node": "18.7.18",
-    "ethers": "5.7.1",
-    "metamas": "0.1.0",
-    "bn.js": "5.2.1",
-    "react": "18.2.0"
+    "tsc": "^2.0.4",
+    "tsc-watch": "^5.0.3",
+    "typescript": "^4.8.4"
   }
 }

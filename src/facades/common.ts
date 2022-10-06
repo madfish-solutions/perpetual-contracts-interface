@@ -1,8 +1,9 @@
-import { Contract, ethers } from "ethers";
-import { address } from "../types";
-import { BigNumber } from "bignumber.js";
+import { BigNumber } from 'bignumber.js';
+import { Contract, ethers } from 'ethers';
 
-export default class CommonFacade {
+import { address } from '../types';
+
+export class CommonFacade {
   static address: address;
   provider: ethers.providers.JsonRpcProvider;
   contract: Contract;
@@ -13,7 +14,7 @@ export default class CommonFacade {
     provider: string,
     contractAddress: address,
     abi: ethers.ContractInterface,
-    signer: ethers.Wallet, //ethers.providers.JsonRpcSigner,
+    signer: ethers.Wallet //ethers.providers.JsonRpcSigner,
   ) {
     this.provider = new ethers.providers.JsonRpcProvider(provider);
     this.contract = new ethers.Contract(contractAddress, abi, this.provider);
@@ -24,17 +25,11 @@ export default class CommonFacade {
     return await this.contract.methods.owner().call();
   }
 
-  public fromPrecision(
-    value: BigNumber,
-    precision = CommonFacade.PRECISION,
-  ): BigNumber {
+  public fromPrecision(value: BigNumber, precision = CommonFacade.PRECISION): BigNumber {
     return value.div(precision);
   }
 
-  public toPrecision(
-    value: BigNumber,
-    precision = CommonFacade.PRECISION,
-  ): BigNumber {
+  public toPrecision(value: BigNumber, precision = CommonFacade.PRECISION): BigNumber {
     return value.multipliedBy(precision);
   }
 }

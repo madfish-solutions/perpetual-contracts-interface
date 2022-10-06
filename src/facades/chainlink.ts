@@ -1,15 +1,11 @@
-import { Bytes, ethers, Transaction } from "ethers";
-import { address, Side } from "../types";
-import { BigNumber } from "bignumber.js";
-import CommonFacade from "./common";
-import { chainLinkABI } from "../abi";
+import { ethers } from 'ethers';
 
-export default class ChainlinkPriceFeed extends CommonFacade {
-  constructor(
-    provider: string,
-    contractAddress: address,
-    signer: ethers.Wallet,
-  ) {
+import { chainLinkABI } from '../abi';
+import { address } from '../types';
+import { CommonFacade } from './common';
+
+export class ChainlinkPriceFeed extends CommonFacade {
+  constructor(provider: string, contractAddress: address, signer: ethers.Wallet) {
     super(provider, contractAddress, chainLinkABI, signer);
   }
 
@@ -26,9 +22,7 @@ export default class ChainlinkPriceFeed extends CommonFacade {
     return await (
       await this.contract
         .connect(this.signer)
-        .updateLatestRoundData(
-          ethers.utils.formatBytes32String(priceFeedKey.toUpperCase()),
-        )
+        .updateLatestRoundData(ethers.utils.formatBytes32String(priceFeedKey.toUpperCase()))
     ).wait();
   }
 
@@ -37,16 +31,11 @@ export default class ChainlinkPriceFeed extends CommonFacade {
    * @returns price of the currency in USD (18 decimals)
    */
   public async getPrice(priceFeedKey: string) {
-    return await this.contract.getPrice(
-      ethers.utils.formatBytes32String(priceFeedKey.toUpperCase()),
-    );
+    return await this.contract.getPrice(ethers.utils.formatBytes32String(priceFeedKey.toUpperCase()));
   }
 
   public async getTwapPrice(priceFeedKey: string, interval: number) {
-    return await this.contract.getTwapPrice(
-      ethers.utils.formatBytes32String(priceFeedKey.toUpperCase()),
-      interval,
-    );
+    return await this.contract.getTwapPrice(ethers.utils.formatBytes32String(priceFeedKey.toUpperCase()), interval);
   }
 
   /**
@@ -54,18 +43,14 @@ export default class ChainlinkPriceFeed extends CommonFacade {
    * @param addr address of the chainlink oracle
    */
   public async addAggregator(priceFeedKey: string, addr: address) {
-    return await this.contract
-      .connect(this.signer)
-      .addAggregator(ethers.utils.formatBytes32String(priceFeedKey), addr);
+    return await this.contract.connect(this.signer).addAggregator(ethers.utils.formatBytes32String(priceFeedKey), addr);
   }
 
   /**
    * @param priceFeedKey currency (aapl, amd)
    */
   public async removeAggregator(priceFeedKey: string) {
-    return await this.contract
-      .connect(this.signer)
-      .removeAggregator(ethers.utils.formatBytes32String(priceFeedKey));
+    return await this.contract.connect(this.signer).removeAggregator(ethers.utils.formatBytes32String(priceFeedKey));
   }
 
   /**
@@ -73,9 +58,7 @@ export default class ChainlinkPriceFeed extends CommonFacade {
    * @returns address of the chainlink oracle
    */
   public async getAggregator(priceFeedKey: string) {
-    return await this.contract.getAggregator(
-      ethers.utils.formatBytes32String(priceFeedKey),
-    );
+    return await this.contract.getAggregator(ethers.utils.formatBytes32String(priceFeedKey));
   }
 
   /**
@@ -87,7 +70,7 @@ export default class ChainlinkPriceFeed extends CommonFacade {
   public async getPreviousPrice(priceFeedKey: string, numOfRoundBack: number) {
     return await this.contract.getPreviousPrice(
       ethers.utils.formatBytes32String(priceFeedKey.toUpperCase()),
-      numOfRoundBack,
+      numOfRoundBack
     );
   }
 
@@ -96,8 +79,6 @@ export default class ChainlinkPriceFeed extends CommonFacade {
    * @returns uint256 length of the price feed map
    */
   public async getPriceFeedMapLength(priceFeedKey: string) {
-    return await this.contract.getPriceFeedMapLength(
-      ethers.utils.formatBytes32String(priceFeedKey.toUpperCase()),
-    );
+    return await this.contract.getPriceFeedMapLength(ethers.utils.formatBytes32String(priceFeedKey.toUpperCase()));
   }
 }
