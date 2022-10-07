@@ -2,6 +2,7 @@ import { BigNumber } from 'bignumber.js';
 import { ethers, Transaction } from 'ethers';
 
 import { clearingHouseABI } from '../abi';
+import { toBigNumber } from '../number';
 import { address, Side } from '../types';
 import { CommonFacade } from './common';
 
@@ -11,19 +12,19 @@ export class ClearingHouse extends CommonFacade {
   }
 
   public async getLiquidationFeeRatio(): Promise<BigNumber> {
-    return await this.contract.liquidationFeeRatio();
+    return toBigNumber(await this.contract.liquidationFeeRatio());
   }
 
   public async getInitMarginRatio(): Promise<BigNumber> {
-    return await this.contract.initMarginRatio();
+    return toBigNumber(await this.contract.initMarginRatio());
   }
 
   public async getMaintenanceMarginRatio(): Promise<BigNumber> {
-    return this.contract.maintenanceMarginRatio();
+    return toBigNumber(await this.contract.maintenanceMarginRatio());
   }
 
   public async getPartialLiqudationRatio(): Promise<BigNumber> {
-    return await this.contract.partialLiqudationRatio();
+    return toBigNumber(await this.contract.partialLiqudationRatio());
   }
 
   /**
@@ -33,12 +34,15 @@ export class ClearingHouse extends CommonFacade {
    * @param trader trader address
    * @return margin ratio in 18 digits
    */
-  public async getMarginRatio(amm: address, trader: address): Promise<BigNumber> {
-    return await this.contract.getMarginRatio(amm, trader);
+  public async getMarginRatio(
+    amm: address,
+    trader: address,
+  ) {
+    return toBigNumber(await this.contract.getMarginRatio(amm, trader));
   }
 
-  public async getPartialLiquidationRatio(): Promise<BigNumber> {
-    return await this.contract.partialLiquidationRatio();
+  public async getPartialLiquidationRatio() {
+    return toBigNumber(await this.contract.partialLiquidationRatio());
   }
   public async getInsuranceFund(): Promise<address> {
     return await this.contract.insuranceFund();

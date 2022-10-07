@@ -1,6 +1,7 @@
 import { ethers } from 'ethers';
 
 import { ammABI } from '../abi';
+import { toBigNumber } from '../number';
 import { address } from '../types';
 import { CommonFacade } from './common';
 
@@ -10,10 +11,14 @@ export class Amm extends CommonFacade {
   }
 
   public async getUnderlyingPrice() {
-    return await this.contract.getUnderlyingPrice();
+    return toBigNumber(await this.contract.getUnderlyingPrice());
   }
 
   public async setPriceFeed(priceFeed: address) {
-    return await (await this.contract.connect(this.signer).setPriceFeed(priceFeed, { gasLimit: 1000000 })).wait();
+    return await (
+      await this.contract
+        .connect(this.signer)
+        .setPriceFeed(priceFeed, { gasLimit: 1000000 })
+    ).wait();
   }
 }
