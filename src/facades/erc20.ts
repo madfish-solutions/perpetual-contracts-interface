@@ -3,11 +3,11 @@ import { BigNumber } from 'bignumber.js';
 import { ethers, Transaction } from 'ethers';
 
 import { erc20ABI } from '../abi';
-import { address } from '../types';
+import { address, EthersProvider, EthersSigner } from '../types';
 import { CommonFacade } from './common';
 
 export class ERC20 extends CommonFacade {
-  constructor(provider: string, contractAddress: address, signer: ethers.Wallet) {
+  constructor(provider: EthersProvider | string, contractAddress: address, signer: EthersSigner) {
     super(provider, contractAddress, erc20ABI, signer);
   }
 

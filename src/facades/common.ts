@@ -1,22 +1,22 @@
 import { BigNumber } from 'bignumber.js';
 import { Contract, ethers } from 'ethers';
 
-import { address } from '../types';
+import { address, EthersProvider, EthersSigner } from '../types';
 
 export class CommonFacade {
   static address: address;
-  provider: ethers.providers.JsonRpcProvider;
+  provider: EthersProvider;
   contract: Contract;
-  signer: ethers.Wallet; //ethers.providers.JsonRpcSigner;
+  signer: EthersSigner;
   public static PRECISION = 1e18;
 
   constructor(
-    provider: string,
+    provider: EthersProvider | string,
     contractAddress: address,
     abi: ethers.ContractInterface,
-    signer: ethers.Wallet //ethers.providers.JsonRpcSigner,
+    signer: ethers.Wallet | ethers.providers.JsonRpcSigner,
   ) {
-    this.provider = new ethers.providers.JsonRpcProvider(provider);
+    this.provider = typeof provider === 'string' ? new ethers.providers.JsonRpcProvider(provider) : provider;
     this.contract = new ethers.Contract(contractAddress, abi, this.provider);
     this.signer = signer;
   }

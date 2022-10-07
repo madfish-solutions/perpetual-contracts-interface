@@ -3,11 +3,11 @@ import { ethers, Transaction } from 'ethers';
 
 import { clearingHouseABI } from '../abi';
 import { toBigNumber } from '../number';
-import { address, Side } from '../types';
+import { address, EthersProvider, EthersSigner, Side } from '../types';
 import { CommonFacade } from './common';
 
 export class ClearingHouse extends CommonFacade {
-  constructor(provider: string, contractAddress: address, signer: ethers.Wallet) {
+  constructor(provider: EthersProvider | string, contractAddress: address, signer: EthersSigner) {
     super(provider, contractAddress, clearingHouseABI, signer);
   }
 

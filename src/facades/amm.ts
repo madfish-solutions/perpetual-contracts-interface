@@ -2,11 +2,11 @@ import { ethers } from 'ethers';
 
 import { ammABI } from '../abi';
 import { toBigNumber } from '../number';
-import { address } from '../types';
+import { address, EthersProvider, EthersSigner } from '../types';
 import { CommonFacade } from './common';
 
 export class Amm extends CommonFacade {
-  constructor(provider: string, contractAddress: address, signer: ethers.Wallet) {
+  constructor(provider: EthersProvider | string, contractAddress: address, signer: EthersSigner) {
     super(provider, contractAddress, ammABI, signer);
   }
 

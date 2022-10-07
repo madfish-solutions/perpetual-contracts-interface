@@ -1,11 +1,11 @@
 import { ethers } from 'ethers';
 
 import { chainLinkABI } from '../abi';
-import { address } from '../types';
+import { address, EthersProvider, EthersSigner } from '../types';
 import { CommonFacade } from './common';
 
 export class ChainlinkPriceFeed extends CommonFacade {
-  constructor(provider: string, contractAddress: address, signer: ethers.Wallet) {
+  constructor(provider: EthersProvider | string, contractAddress: address, signer: EthersSigner) {
     super(provider, contractAddress, chainLinkABI, signer);
   }
 
