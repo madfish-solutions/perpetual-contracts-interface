@@ -1,16 +1,13 @@
-import { ethers, Transaction } from "ethers";
-import { address, Side } from "../types";
-import { BigNumber } from "bignumber.js";
-import CommonFacade from "./common";
-import { clearingHouseABI } from "../abi";
-import { toBigNumber } from "../number";
+import { BigNumber } from 'bignumber.js';
+import { ethers, Transaction } from 'ethers';
 
-export default class ClearingHouse extends CommonFacade {
-  constructor(
-    provider: string,
-    contractAddress: address,
-    signer: ethers.Wallet,
-  ) {
+import { clearingHouseABI } from '../abi';
+import { toBigNumber } from '../number';
+import { address, EthersProvider, EthersSigner, Side } from '../types';
+import { CommonFacade } from './common';
+
+export class ClearingHouse extends CommonFacade {
+  constructor(provider: EthersProvider | string, contractAddress: address, signer: EthersSigner) {
     super(provider, contractAddress, clearingHouseABI, signer);
   }
 
@@ -40,11 +37,11 @@ export default class ClearingHouse extends CommonFacade {
   public async getMarginRatio(
     amm: address,
     trader: address,
-  ): Promise<BigNumber> {
+  ) {
     return toBigNumber(await this.contract.getMarginRatio(amm, trader));
   }
 
-  public async getPartialLiquidationRatio(): Promise<BigNumber> {
+  public async getPartialLiquidationRatio() {
     return toBigNumber(await this.contract.partialLiquidationRatio());
   }
   public async getInsuranceFund(): Promise<address> {
@@ -54,9 +51,7 @@ export default class ClearingHouse extends CommonFacade {
   /**
     it's not an accurate open interest, just a rough way to control the unexpected loss at the beginning
   */
-  public async getOpenInterestNotionalMap(
-    amm: address,
-  ): Promise<Map<address, BigNumber>> {
+  public async getOpenInterestNotionalMap(amm: address): Promise<Map<address, BigNumber>> {
     return await this.contract.openInterestNotionalMap(amm);
   }
 
@@ -72,14 +67,9 @@ export default class ClearingHouse extends CommonFacade {
    * @param amount added margin in 18 digits
    */
   public async addMargin(amm: address, amount: BigNumber) {
-    await this.contract
-      .connect(this.signer)
-      .estimateGas.addMargin(amm, [amount.toFixed()]);
-    return await (
-      await this.contract
-        .connect(this.signer)
-        .addMargin(amm, [amount.toFixed()])
-    ).wait();
+    await this.contract.connect(this.signer).estimateGas.addMargin(amm, [amount.toFixed()]);
+
+    return await (await this.contract.connect(this.signer).addMargin(amm, [amount.toFixed()])).wait();
   }
 
   /**
@@ -92,18 +82,10 @@ export default class ClearingHouse extends CommonFacade {
    * @eventParam uint256 margin
    * @eventParam uint256 marginRatio)
    */
-  public async removeMargin(
-    amm: address,
-    amount: BigNumber,
-  ): Promise<Transaction> {
-    await this.contract
-      .connect(this.signer)
-      .estimateGas.removeMargin(amm, [amount.toString()]);
-    return await (
-      await this.contract
-        .connect(this.signer)
-        .removeMargin(amm, [amount.toString()])
-    ).wait();
+  public async removeMargin(amm: address, amount: BigNumber): Promise<Transaction> {
+    await this.contract.connect(this.signer).estimateGas.removeMargin(amm, [amount.toString()]);
+
+    return await (await this.contract.connect(this.signer).removeMargin(amm, [amount.toString()])).wait();
   }
 
   /**
@@ -112,9 +94,8 @@ export default class ClearingHouse extends CommonFacade {
    */
   public async settlePosition(amm: address): Promise<Transaction> {
     await this.contract.connect(this.signer).estimateGas.settlePosition(amm);
-    return await (
-      await this.contract.connect(this.signer).settlePosition(amm)
-    ).wait();
+
+    return await (await this.contract.connect(this.signer).settlePosition(amm)).wait();
   }
 
   /**
@@ -145,7 +126,7 @@ export default class ClearingHouse extends CommonFacade {
     side: Side,
     quoteAssetAmount: BigNumber,
     leverage: BigNumber,
-    baseAssetAmountLimit: BigNumber,
+    baseAssetAmountLimit: BigNumber
   ): Promise<Transaction> {
     await this.contract
       .connect(this.signer)
@@ -155,7 +136,7 @@ export default class ClearingHouse extends CommonFacade {
         [quoteAssetAmount.toString()],
         [leverage.toString()],
         [baseAssetAmountLimit.toString()],
-        { gasLimit: 1000000 },
+        { gasLimit: 1000000 }
       );
 
     return await (
@@ -167,7 +148,7 @@ export default class ClearingHouse extends CommonFacade {
           [quoteAssetAmount.toString()],
           [leverage.toString()],
           [baseAssetAmountLimit.toString()],
-          { gasLimit: 1000000 },
+          { gasLimit: 1000000 }
         )
     ).wait();
   }
@@ -192,14 +173,9 @@ export default class ClearingHouse extends CommonFacade {
    * @eventParam int256 fundingPayment
    */
   public async closePosition(_amm: address): Promise<Transaction> {
-    await this.contract
-      .connect(this.signer)
-      .estimateGas.closePosition(_amm, { gasLimit: 1000000 });
-    return await (
-      await this.contract
-        .connect(this.signer)
-        .closePosition(_amm, { gasLimit: 1000000 })
-    ).wait();
+    await this.contract.connect(this.signer).estimateGas.closePosition(_amm, { gasLimit: 1000000 });
+
+    return await (await this.contract.connect(this.signer).closePosition(_amm, { gasLimit: 1000000 })).wait();
   }
 
   /**
@@ -234,14 +210,9 @@ export default class ClearingHouse extends CommonFacade {
    * @eventParam int256 fundingPayment
    */
   public async liquidate(amm: address, trader: address): Promise<Transaction> {
-    await this.contract
-      .connect(this.signer)
-      .estimateGas.liquidate(amm, trader, { gasLimit: 1000000 });
-    return await (
-      await this.contract
-        .connect(this.signer)
-        .liquidate(amm, trader, { gasLimit: 1000000 })
-    ).wait();
+    await this.contract.connect(this.signer).estimateGas.liquidate(amm, trader, { gasLimit: 1000000 });
+
+    return await (await this.contract.connect(this.signer).liquidate(amm, trader, { gasLimit: 1000000 })).wait();
   }
 
   /**
@@ -278,27 +249,18 @@ export default class ClearingHouse extends CommonFacade {
   public async liquidateWithSlippage(
     amm: address,
     trader: address,
-    quoteAssetAmountLimit: BigNumber,
+    quoteAssetAmountLimit: BigNumber
   ): Promise<Transaction> {
     await this.contract
       .connect(this.signer)
-      .estimateGas.liquidateWithSlippage(
-        amm,
-        trader,
-        [quoteAssetAmountLimit.toString()],
-        {
-          gasLimit: 1000000,
-        },
-      );
+      .estimateGas.liquidateWithSlippage(amm, trader, [quoteAssetAmountLimit.toString()], {
+        gasLimit: 1000000
+      });
+
     return await (
       await this.contract
         .connect(this.signer)
-        .liquidateWithSlippage(
-          amm,
-          trader,
-          [quoteAssetAmountLimit.toString()],
-          { gasLimit: 1000000 },
-        )
+        .liquidateWithSlippage(amm, trader, [quoteAssetAmountLimit.toString()], { gasLimit: 1000000 })
     ).wait();
   }
 
@@ -312,17 +274,14 @@ export default class ClearingHouse extends CommonFacade {
    */
   public async payFunding(amm: address): Promise<Transaction> {
     await this.contract.connect(this.signer).estimateGas.payFunding(amm);
-    return await (
-      await this.contract.connect(this.signer).payFunding(amm)
-    ).wait();
+
+    return await (await this.contract.connect(this.signer).payFunding(amm)).wait();
   }
 
   //web3.utils.asciiToHex(str)
   public async addAggregator(key: string, addrr: address) {
     return await (
-      await this.contract
-        .connect(this.signer)
-        .addAggregator(ethers.utils.formatBytes32String(key), addrr)
+      await this.contract.connect(this.signer).addAggregator(ethers.utils.formatBytes32String(key), addrr)
     ).wait();
   }
 }

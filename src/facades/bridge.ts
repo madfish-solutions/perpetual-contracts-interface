@@ -1,9 +1,9 @@
-import { address, Side } from "../types";
-import { BigNumber } from "bignumber.js";
-import { Contract, ethers, Transaction } from "ethers";
-import { bridgeABI } from "../abi";
+import { BigNumber } from 'bignumber.js';
+import { Contract, ethers } from 'ethers';
 
-export default class Bridge {
+import { address } from '../types';
+
+export class Bridge {
   static address: address;
   parentProvider: ethers.providers.JsonRpcProvider;
   childProvider: ethers.providers.JsonRpcProvider;
@@ -24,44 +24,26 @@ export default class Bridge {
     childToken: address,
     abi: ethers.ContractInterface,
     parentSigner: ethers.Wallet, //ethers.providers.JsonRpcSigner,
-    childSigner: ethers.Wallet, //ethers.providers.JsonRpcSigner,
+    childSigner: ethers.Wallet //ethers.providers.JsonRpcSigner,
   ) {
     this.parentProvider = new ethers.providers.JsonRpcProvider(parentProvider);
     this.childProvider = new ethers.providers.JsonRpcProvider(childProvider);
-    this.parentBridge = new ethers.Contract(
-      parentAddress,
-      abi,
-      this.parentProvider,
-    );
+    this.parentBridge = new ethers.Contract(parentAddress, abi, this.parentProvider);
     this.parentSigner = parentSigner;
-    this.childBridge = new ethers.Contract(
-      childAddress,
-      abi,
-      this.childProvider,
-    );
+    this.childBridge = new ethers.Contract(childAddress, abi, this.childProvider);
     this.childSigner = childSigner;
     this.parentToken = parentToken;
     this.childToken = childToken;
   }
 
-  public async transferERC20ToParent(
-    amount: BigNumber,
-    sender: address,
-    recipient: address,
-  ) {
+  public async transferERC20ToParent(amount: BigNumber, sender: address, recipient: address) {
     const tx1 = await this.childBridge
       .connect(this.childSigner)
-      .requestERC20Transfer(
-        this.childToken,
-        recipient,
-        amount.toString(),
-        0,
-        [],
-        {
-          gasLimit: 100000000,
-        },
-      );
+      .requestERC20Transfer(this.childToken, recipient, amount.toString(), 0, [], {
+        gasLimit: 100000000
+      });
     const receipt1 = await tx1.wait();
+    // eslint-disable-next-line no-console
     console.log(
       tx1.hash,
       sender,
@@ -69,7 +51,7 @@ export default class Bridge {
       this.parentToken,
       amount.toString(),
       (await this.childBridge.requestNonce()) - 1,
-      receipt1.blockNumber,
+      receipt1.blockNumber
     );
 
     const tx2 = await this.parentBridge
@@ -83,8 +65,9 @@ export default class Bridge {
         (await this.childBridge.requestNonce()) - 1,
         receipt1.blockNumber,
         [],
-        { gasLimit: 100000000 },
+        { gasLimit: 100000000 }
       );
+    // eslint-disable-next-line no-console
     console.log(await tx2.wait());
 
     // const a = await this.parentProvider.getTransaction(tx2.hash);
@@ -103,22 +86,11 @@ export default class Bridge {
   /**
    * Transfer main chain to service chain
    */
-  public async transferERC20ToChild(
-    amount: BigNumber,
-    sender: address,
-    recipient: address,
-  ) {
+  public async transferERC20ToChild(amount: BigNumber, sender: address, recipient: address) {
     //console.log(await this.parentBridge.owner());
     const tx1 = await this.parentBridge
       .connect(this.parentSigner)
-      .requestERC20Transfer(
-        this.parentToken,
-        recipient,
-        amount.toString(),
-        0,
-        [],
-        { gasLimit: 100000000 },
-      );
+      .requestERC20Transfer(this.parentToken, recipient, amount.toString(), 0, [], { gasLimit: 100000000 });
     // const tx1 = await this.parentBridge
     //   .connect(this.parentSigner)
     //   .registerOperator("0x9F79dD2b30094A3F5B7b331158934F0daC743648");
@@ -136,14 +108,15 @@ export default class Bridge {
         await this.parentBridge.requestNonce(),
         receipt1.blockNumber,
         [],
-        { gasLimit: 100000000 },
+        { gasLimit: 100000000 }
       );
     const rec2 = await tx2.wait();
-    console.log(tx2);
+    // eslint-disable-next-line no-console
+    console.log(tx2, rec2);
     // console.log(rec2);
   }
 
-  private async sleep(ms) {
+  private async sleep(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
@@ -153,16 +126,12 @@ export default class Bridge {
    * @param sender  address of sender from main chain
    * @param recipient address of recipient on service chain
    */
-  public async transferKlayToChild(
-    amount: BigNumber,
-    sender: address,
-    recipient: address,
-  ) {
+  public async transferKlayToChild(amount: BigNumber, sender: address, recipient: address) {
     const tx1 = await this.parentBridge
       .connect(this.parentSigner)
       .requestKLAYTransfer(recipient, amount.toString(), [], {
         gasLimit: 100000000,
-        value: amount.toString(),
+        value: amount.toString()
       });
     const receipt1 = await tx1.wait();
 
@@ -175,7 +144,7 @@ export default class Bridge {
         amount.toString(),
         await this.parentBridge.requestNonce(),
         receipt1.blockNumber,
-        [],
+        []
       );
     await tx2.wait();
   }
@@ -186,17 +155,11 @@ export default class Bridge {
    * @param recipient address of recipient on main chain
    * @param sender address of sender from service chain
    */
-  public async transferKlayToParent(
-    amount: BigNumber,
-    recipient: address,
-    sender: address,
-  ) {
-    const tx1 = await this.childBridge
-      .connect(this.childSigner)
-      .requestKLAYTransfer(recipient, amount.toString(), [], {
-        gasLimit: 100000000,
-        value: amount.toString(),
-      });
+  public async transferKlayToParent(amount: BigNumber, recipient: address, sender: address) {
+    const tx1 = await this.childBridge.connect(this.childSigner).requestKLAYTransfer(recipient, amount.toString(), [], {
+      gasLimit: 100000000,
+      value: amount.toString()
+    });
     const receipt1 = await tx1.wait();
 
     const tx2 = await this.parentBridge
@@ -209,7 +172,7 @@ export default class Bridge {
         (await this.childBridge.requestNonce()).toNumber() - 1,
         receipt1.blockNumber,
         [],
-        { gasLimit: 200000000 },
+        { gasLimit: 200000000 }
       );
 
     await tx2.wait();
